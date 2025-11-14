@@ -1,0 +1,115 @@
+/* :root {
+	font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+	line-height: 1.5;
+	font-weight: 400;
+	
+	color-scheme: light dark;
+	color: rgba(255, 255, 255, 0.87);
+	background-color: #242424;
+	
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+} */
+
+body {
+	margin: 0;
+}
+
+.topbar {
+    z-index: 3;
+    width: 100%;
+    height: 8.64vh;
+    position: fixed;
+	background-color: #E1CDC6;
+}
+
+.bar {
+    justify-content: space-between;
+    align-items: center;
+    display: flex;
+}
+
+.boozy {
+    background-image: url(../src/assets/boozy.png);
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 12.64vh;
+    height: 3.02vh;
+    margin-top: 2.81vh;
+    margin-bottom: 2.81vh;
+}
+
+.viewport {
+    width: 100vw;
+    height: 100vh;
+    padding-top: 10.59vh;
+    padding-bottom: 10.59vh;
+    position: fixed;
+    overflow: scroll;
+	background-color: #9F2C4B
+}
+
+.main-content {
+    width: 355.24vh;
+    height: 100%;
+    position: relative;
+}
+
+.row {
+	grid-column-gap: 2.16vh;
+	grid-row-gap: 2.16vh;
+	justify-content: flex-start;
+	display: flex;
+}
+
+.column {
+    grid-column-gap: 2.16vh;
+    grid-row-gap: 2.16vh;
+    flex-direction: column;
+    justify-content: flex-start;
+    display: flex;
+	background-color: aquamarine;
+	height: 751.125px;
+}
+
+.bottom-bar {
+	z-index: 2;
+    position: fixed;
+    inset: auto 0% 0%;
+	background-color:antiquewhite;
+	height: 98.1562px;
+}
+
+.container {
+    padding-left: 1.81vh;
+    padding-right: 2.81vh;
+}
+
+.footer {
+    justify-content: space-between;
+    align-items: center;
+    display: flex;
+}
+
+.footer-left-links {
+    grid-column-gap: 4.75vh;
+    grid-row-gap: 4.75vh;
+    border-radius: 4px;
+    justify-content: flex-start;
+    align-items: center;
+    height: 3.45vh;
+    padding: 0.81vh 1vh;
+    display: flex;
+}
+
+.footer-right-links {
+    grid-column-gap: 2.8vh;
+    grid-row-gap: 2.8vh;
+    flex-direction: row;
+    align-items: flex-end;
+    padding-bottom: 2.81vh;
+    display: flex;
+}
