@@ -24,3 +24,19 @@ dist-ssr
 *.sw?
 
 *docs
+
+# Claude Code & MCP
+.claude/
+.mcp.json
+.playwright-mcp/
+playwright-profile/
+
+# Videos (use CDN or external storage)
+*.mp4
+
+# Keep only WebP images, ignore source files
+src/assets/*.jpg
+src/assets/*.png
+# Except stickers (small PNG files)
+!src/assets/sticker-*.png
+!src/assets/*.webp
