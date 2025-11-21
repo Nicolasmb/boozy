@@ -31,8 +31,10 @@ dist-ssr
 .playwright-mcp/
 playwright-profile/
 
-# Videos (use CDN or external storage)
+# Videos - ignore originals but keep optimized
 *.mp4
+# Except optimized videos (small, compressed)
+!src/assets/*-optimized.mp4
 
 # Keep only WebP images, ignore source files
 src/assets/*.jpg
