@@ -12,7 +12,7 @@ import { Contacto } from './pages/Contacto.tsx'
 
 createRoot(document.getElementById('root')!).render(
 	<StrictMode>
-		<BrowserRouter>
+		<BrowserRouter basename="/boozy">
 			<Routes>
 				<Route path="/" element={<App />}>
 					<Route index element={<Home />} />
