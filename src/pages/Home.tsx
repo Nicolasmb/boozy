@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom'
-import { useSmoothScroll } from '../hooks/useSmoothScroll'
+import { Link, useLocation } from 'react-router-dom'
+// import { useSmoothScroll } from '../hooks/useSmoothScroll'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { OptimizedImage } from '../components/OptimizedImage'
 import { DraggableSticker } from '../components/DraggableSticker'
@@ -25,34 +25,76 @@ import tragosVideo from '../assets/tragos-redes-1-optimized.mp4'
 import stickerRed from '../assets/sticker-red.png'
 import stickerGreen from '../assets/sticker-green.png'
 import stickerBlack from '../assets/sticker-black.png'
+import cinta from '../assets/cinta.png'
 
 export function Home() {
 	const homeRef = useRef<HTMLDivElement>(null)
+	const location = useLocation()
 
-	// Initialize Lenis smooth scrolling
-	useSmoothScroll()
+	// Initialize Lenis smooth scrolling - DESACTIVADO para usar CSS scroll-behavior: smooth
+	// useSmoothScroll()
 
 	// Initialize scroll animations
 	useScrollAnimation()
 
 	useEffect(() => {
-		const home = homeRef.current
-		if (!home) return
+		const pageContainer = document.querySelector('.page-container') as HTMLElement
+		if (!pageContainer) return
 
 		const handleWheel = (e: WheelEvent) => {
 			e.preventDefault()
-			home.scrollLeft += e.deltaY + e.deltaX
+			// Scroll inmediato con la rueda del mouse para mejor control
+			pageContainer.scrollLeft += e.deltaY + e.deltaX
 		}
 
-		home.addEventListener('wheel', handleWheel, { passive: false })
+		pageContainer.addEventListener('wheel', handleWheel, { passive: false })
 
 		return () => {
-			home.removeEventListener('wheel', handleWheel)
+			pageContainer.removeEventListener('wheel', handleWheel)
 		}
 	}, [])
 
+	// Manejar scroll cuando se navega desde otra página
+	useEffect(() => {
+		const state = location.state as { scrollTo?: string } | null
+		if (state?.scrollTo) {
+			// Pequeño delay para asegurar que el DOM esté completamente cargado
+			setTimeout(() => {
+				const element = document.getElementById(state.scrollTo!)
+				const pageContainer = document.querySelector('.page-container') as HTMLElement
+				if (element && pageContainer) {
+					// Scroll horizontal suave animado
+					const targetLeft = element.offsetLeft - 100
+					const startLeft = pageContainer.scrollLeft
+					const distance = targetLeft - startLeft
+					const duration = 800 // Duración en milisegundos
+					let startTime: number | null = null
+
+					function animation(currentTime: number) {
+						if (startTime === null) startTime = currentTime
+						const timeElapsed = currentTime - startTime
+						const progress = Math.min(timeElapsed / duration, 1)
+
+						// Easing function (easeInOutCubic)
+						const ease = progress < 0.5
+							? 4 * progress * progress * progress
+							: 1 - Math.pow(-2 * progress + 2, 3) / 2
+
+						pageContainer.scrollLeft = startLeft + distance * ease
+
+						if (progress < 1) {
+							requestAnimationFrame(animation)
+						}
+					}
+
+					requestAnimationFrame(animation)
+				}
+			}, 300)
+		}
+	}, [location])
+
 	return (
-		<div className='home' ref={homeRef}>
+		<div className='home' ref={homeRef} id="home">
 			{/* Contenedor de stickers - capa absoluta que se mueve con el scroll */}
 			<div className='stickers-container'>
 				{/* Sticker rojo #QUIEROBOOZY - arrastrable y rotable */}
@@ -79,7 +121,7 @@ export function Home() {
 
 			<div className='main-content'>
 				{/* 1º COLUMNA */}
-				<div className='column box-0'>
+				<div className='column box-0' id="productos">
 					{/* Hero Product Image */}
 					<div className='animate-on-scroll'>
 						<a href="#productos" className="w-inline-block">
@@ -92,12 +134,14 @@ export function Home() {
 							/>
 						</a>
 					</div>
-					<Link to="/sos-sexy" className="sos-sexy-text">
-						¿SOS SEXY?
-					</Link>
+					<div className='animate-on-scroll delay-200'>
+						<Link to="/sos-sexy" className="sos-sexy-text">
+							¿SOS SEXY?
+						</Link>
+					</div>
 				</div>
 				{/* 2º COLUMNA */}
-				<div className='column'>
+				<div className='column' id="blend">
 						<div className='row'>
 							<div className="box-1 animate-on-scroll delay-200">
 								<a href="#blend" className="link-block w-inline-block">
@@ -108,7 +152,6 @@ export function Home() {
 									<div>
 										<OptimizedImage
 											className="boozy-logo-image"
-											
 											webpSrc={boozyDarkImageWebP}
 											alt="BOOZY"
 											loading="eager"
@@ -122,7 +165,6 @@ export function Home() {
 								<div className='picture-box'>
 									<OptimizedImage
 										className='image'
-										
 										webpSrc={picture8WebP}
 										alt='BOOZY - Experiencia única'
 										loading="lazy"
@@ -131,7 +173,6 @@ export function Home() {
 								<div className='picture-box'>
 									<OptimizedImage
 										className='image'
-										
 										webpSrc={picture2WebP}
 										alt='BOOZY - Cóctel helado'
 										loading="lazy"
@@ -140,7 +181,6 @@ export function Home() {
 								<div className='picture-box'>
 									<OptimizedImage
 										className='image'
-										
 										webpSrc={picture3WebP}
 										alt='BOOZY - Para los más sexy'
 										loading="lazy"
@@ -170,7 +210,6 @@ export function Home() {
 						<div className='picture-box'>
 							<OptimizedImage
 								className='image'
-								
 								webpSrc={picture4WebP}
 								alt='BOOZY - Innovador y trendy'
 								loading="lazy"
@@ -181,7 +220,6 @@ export function Home() {
 						<div className='picture-box'>
 							<OptimizedImage
 								className='image'
-								
 								webpSrc={picture5WebP}
 								alt='BOOZY - Único en el mercado'
 								loading="lazy"
@@ -207,24 +245,23 @@ export function Home() {
 				</div>
 
 				{/* PRESENTACIÓN Section */}
-				<div className='row animate-on-scroll delay-500'>
+				<div className='row animate-on-scroll delay-500' id="sabores">
 					<div className='box-12'>
 						<Link to="/presentacion" className="presentacion-text">
 							PRESENTACIÓN
 						</Link>
 						<div className="te-animas-text">
-							¿Te animás?
+							¿TE ANIMÁS?
 						</div>
 					</div>
 				</div>
 				</div>
 				{/* 4º COLUMNA - Videos & Images */}
-				<div className='column'>
+				<div className='column column-4' id="fusion">
 					<div className='box-17'>
 						<div className='row animate-on-scroll delay-500'>
-							<div className="te-animas-text">
-								“FUSIÓN DE UN COCTEL PREMIUM
-								& UN HELADO ARTESANAL”
+							<div className="fusion-text">
+								"<strong className='highlight'>FUSIÓN DE UN COCTEL PREMIUM</strong> &amp; UN HELADO ARTESANAL”
 							</div>
 						</div>
 					</div>
@@ -247,7 +284,7 @@ export function Home() {
 						</div>
 
 						{/* Box 14: DIVERTIDO - Video TRAGOS REDES 1.mp4 */}
-						<div className='box-14 video-panel animate-on-scroll delay-700'>
+						<div className='box-14 video-panel animate-on-scroll delay-700' id="divertido">
 							<video
 								src={tragosVideo}
 								autoPlay
@@ -266,7 +303,6 @@ export function Home() {
 								<div className='picture-box'>
 									<OptimizedImage
 										className='image'
-										
 										webpSrc={picture10WebP}
 										alt='BOOZY - Momentos únicos'
 										loading="lazy"
@@ -277,7 +313,6 @@ export function Home() {
 						<div className='picture-box'>
 							<OptimizedImage
 								className='image'
-								
 								webpSrc={picture11WebP}
 								alt='BOOZY - Es ahora'
 								loading="lazy"
@@ -288,23 +323,75 @@ export function Home() {
 				</div>
 				{/* 5º COLUMNA - Videos & Images */}
 				<div className='column'>
-					<div className='row'>
-						{/* Box 16: ES AHORA - CTA Final */}
-						<div className='box-16 animate-on-scroll delay-900'>
-							<div className="es-ahora-overlay">
-								<h2 className="es-ahora-title">ES AHORA</h2>
-								<p className="es-ahora-text">Esto recién empieza</p>
-								<div className="es-ahora-buttons">
-									<Link to="/presentacion" className="btn-primary">
-										Ver Sabores
-									</Link>
-									<Link to="/se-parte" className="btn-secondary">
-										Quiero Distribuir
-									</Link>
+					{/* Box 16: ES AHORA - CTA Final */}
+					<div className='box-16 animate-on-scroll delay-600' id="es-ahora">
+						<div className="es-ahora-container">
+							{/* LEFT COLUMN: Images with Overlay */}
+							<div className="es-ahora-images">
+								<div className="es-ahora-image-wrapper es-ahora-image-top">
+									<OptimizedImage
+										className='es-ahora-image'
+										webpSrc={picture3WebP}
+										alt='BOOZY - Producto'
+										loading="lazy"
+									/>
 								</div>
+								<div className="es-ahora-sexy-text">
+									<div className="es-ahora-sexy-wrapper">
+										<span className="es-ahora-plus">+</span>
+										<span className="es-ahora-sexy">SEXY</span>
+									</div>
+								</div>
+								<div className="es-ahora-image-wrapper es-ahora-image-bottom">
+									<OptimizedImage
+										className='es-ahora-image'
+										webpSrc={picture4WebP}
+										alt='BOOZY - Producto lifestyle'
+										loading="lazy"
+									/>
+								</div>
+							</div>
+
+							{/* RIGHT COLUMN: Content */}
+							<div className="es-ahora-content">
+								<h2 className="es-ahora-subtitle"><strong>ESTO RECIÉN EMPIEZA</strong></h2>
+								<div className="es-ahora-logo-image">
+									<OptimizedImage
+										className='es-ahora-logo'
+										webpSrc={boozyDarkImageWebP}
+										alt='BOOZY Logo'
+										loading="lazy"
+									/>
+								</div>
+								<p className="es-ahora-text"><strong>BOOZY no es una moda.</strong></p>
+								<p className="es-ahora-text">Es una declaración.</p>
+								<p className="es-ahora-text">
+									Detrás de cada pote hay ideas, pruebas, errores, aciertos.
+									Hay noches sin dormir, apuestas personales y una obsesión:
+									<strong> crear algo que valga la pena sentir.</strong>
+								</p>
+								<p className="es-ahora-text">
+									BOOZY es eso que se nota. Que llama la atención, que despierta sonrisas,
+									que no se olvida fácil.
+								</p>
+								<p className="es-ahora-text">
+									Si buscás algo distinto, si querés que te miren dos veces,
+									si estás cansado de lo mismo y te animás a más...
+								</p>
+								<p className="es-ahora-text"><strong>BOOZY es para vos.</strong></p>
+								<p className="es-ahora-text">
+									Y si tenés un local, un evento o una barra,
+									<strong> convertite en punto BOOZY</strong> y serví una experiencia.
+									No solo vas a vender. Vas a provocar.
+								</p>
 							</div>
 						</div>
 					</div>
+				</div>
+
+				{/* Floating cinta at the end */}
+				<div className="floating-cinta animate-on-scroll delay-900">
+					<img src={cinta} alt="BOOZY Cinta" />
 				</div>
 			</div>
 		</div>

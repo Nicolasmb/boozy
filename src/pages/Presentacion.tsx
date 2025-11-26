@@ -20,7 +20,7 @@ export function Presentacion() {
 						<DraggableSticker
 							src={stickerGreen}
 							alt='BOOZY Sticker'
-							initialX={900}
+							initialX={1050}
 							initialY={0}
 							initialRotation={12}
 							size={120}
@@ -71,14 +71,14 @@ export function Presentacion() {
 					</div>
 					<div className='presentacion-image-item'>
 						<OptimizedImage
-							webpSrc={picture9WebP}
+							webpSrc={picture11WebP}
 							alt='BOOZY - Momento relajante'
 							loading='lazy'
 						/>
 					</div>
 					<div className='presentacion-image-item'>
 						<OptimizedImage
-							webpSrc={picture11WebP}
+							webpSrc={picture9WebP}
 							alt='BOOZY - Estilo de vida'
 							loading='lazy'
 						/>
