@@ -391,7 +391,7 @@ export function Home() {
 
 				{/* Floating cinta at the end */}
 				<div className="floating-cinta animate-on-scroll delay-900">
-					<img src={cinta} alt="BOOZY Cinta" />
+					<img src={cinta} alt="BOOZY Cinta" loading="lazy" />
 				</div>
 			</div>
 		</div>

@@ -39,6 +39,7 @@ playwright-profile/
 # Keep only WebP images, ignore source files
 src/assets/*.jpg
 src/assets/*.png
-# Except stickers (small PNG files)
+# Except stickers and cinta (small PNG files)
 !src/assets/sticker-*.png
+!src/assets/cinta.png
 !src/assets/*.webp
