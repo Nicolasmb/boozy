@@ -13,7 +13,7 @@ export function Footer() {
 		if (location.pathname === '/' || location.pathname === '/boozy' || location.pathname === '/boozy/') {
 			const element = document.getElementById(sectionId);
 			if (element) {
-				const pageContainer = document.querySelector('.page-container');
+				const pageContainer = document.querySelector('.page-container') as HTMLElement;
 				if (pageContainer) {
 					// Scroll horizontal suave animado
 					const targetLeft = element.offsetLeft - 100; // offset para mejor visualización
@@ -32,7 +32,9 @@ export function Footer() {
 							? 4 * progress * progress * progress
 							: 1 - Math.pow(-2 * progress + 2, 3) / 2;
 
-						pageContainer.scrollLeft = startLeft + distance * ease;
+						if (pageContainer) {
+							pageContainer.scrollLeft = startLeft + distance * ease;
+						}
 
 						if (progress < 1) {
 							requestAnimationFrame(animation);
