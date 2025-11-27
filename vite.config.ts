@@ -8,5 +8,10 @@ export default defineConfig({
   assetsInclude: ['**/*.mp4'],
   build: {
     assetsInlineLimit: 0, // Disable inlining for large files
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
   },
 })
