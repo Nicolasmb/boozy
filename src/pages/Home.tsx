@@ -41,10 +41,40 @@ export function Home() {
 		const pageContainer = document.querySelector('.page-container') as HTMLElement
 		if (!pageContainer) return
 
+		// Configuración: ajusta estos valores si el scroll es muy lento/rápido
+		const SCROLL_MULTIPLIER = 2.5 // Multiplicador base
+		const LINE_HEIGHT = 40 // Píxeles por línea (estándar de navegadores)
+		const PAGE_HEIGHT = 800 // Píxeles por página
+
 		const handleWheel = (e: WheelEvent) => {
 			e.preventDefault()
-			// Scroll inmediato con la rueda del mouse para mejor control
-			pageContainer.scrollLeft += e.deltaY + e.deltaX
+
+			let deltaX = e.deltaX
+			let deltaY = e.deltaY
+
+			// Normalizar según el deltaMode (especificación WheelEvent)
+			// https://developer.mozilla.org/en-US/docs/Web/API/WheelEvent/deltaMode
+			switch (e.deltaMode) {
+				case WheelEvent.DOM_DELTA_PIXEL:
+					// 0x00: Los deltas ya están en píxeles (más común)
+					// No hacer nada, ya está normalizado
+					break
+				case WheelEvent.DOM_DELTA_LINE:
+					// 0x01: Los deltas están en líneas (Firefox en Windows/Linux)
+					deltaX *= LINE_HEIGHT
+					deltaY *= LINE_HEIGHT
+					break
+				case WheelEvent.DOM_DELTA_PAGE:
+					// 0x02: Los deltas están en páginas (muy raro)
+					deltaX *= PAGE_HEIGHT
+					deltaY *= PAGE_HEIGHT
+					break
+			}
+
+			// Aplicar multiplicador para control más responsivo
+			const scrollAmount = (deltaY + deltaX) * SCROLL_MULTIPLIER
+
+			pageContainer.scrollLeft += scrollAmount
 		}
 
 		pageContainer.addEventListener('wheel', handleWheel, { passive: false })
