@@ -528,7 +528,7 @@ body {
 }
 
 .box-16 {
-    width: 110vh;
+    width: 150vh;
     height: 100%;
     position: relative;
     flex-shrink: 0;
@@ -755,7 +755,7 @@ body {
 .es-ahora-text {
     display: a;
     font-family: var(--font-body);
-    font-size: 1.4vh;
+    font-size: 2.1vh;
     font-weight: 400;
     color: var(--color-text);
     margin: 0;

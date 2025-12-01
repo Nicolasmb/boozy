@@ -51,6 +51,7 @@ export function Home() {
 
 			let deltaX = e.deltaX
 			let deltaY = e.deltaY
+			const originalDeltaY = deltaY // Para debugging
 
 			// Normalizar según el deltaMode (especificación WheelEvent)
 			// https://developer.mozilla.org/en-US/docs/Web/API/WheelEvent/deltaMode
@@ -73,6 +74,15 @@ export function Home() {
 
 			// Aplicar multiplicador para control más responsivo
 			const scrollAmount = (deltaY + deltaX) * SCROLL_MULTIPLIER
+
+			// DEBUG: Descomentar para ver valores en consola
+			console.log({
+				deltaMode: e.deltaMode,
+				originalDeltaY,
+				normalizedDeltaY: deltaY,
+				finalScrollAmount: scrollAmount,
+				multiplier: SCROLL_MULTIPLIER
+			})
 
 			pageContainer.scrollLeft += scrollAmount
 		}
