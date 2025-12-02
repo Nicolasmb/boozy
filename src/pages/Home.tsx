@@ -47,6 +47,9 @@ export function Home() {
 		const PAGE_HEIGHT = 800 // Píxeles por página
 
 		const handleWheel = (e: WheelEvent) => {
+			// Allow native vertical scroll on mobile
+			if (window.innerWidth <= 768) return
+
 			e.preventDefault()
 
 			let deltaX = e.deltaX
@@ -428,7 +431,7 @@ export function Home() {
 						</div>
 					</div>
 				</div>
-
+				
 				{/* Floating cinta at the end */}
 				<div className="floating-cinta animate-on-scroll delay-900">
 					<img src={cinta} alt="BOOZY Cinta" loading="lazy" />

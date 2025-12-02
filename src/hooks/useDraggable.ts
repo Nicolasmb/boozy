@@ -24,8 +24,12 @@ interface UseDraggableReturn {
 	isHovered: boolean
 	/** Función para iniciar el arrastre (llamar en onMouseDown) */
 	handleMouseDown: (e: React.MouseEvent) => void
+	/** Función para iniciar el arrastre táctil (llamar en onTouchStart) */
+	handleTouchStart: (e: React.TouchEvent) => void
 	/** Función para iniciar la rotación (llamar en onMouseDown del handle) */
 	handleRotateStart: (e: React.MouseEvent) => void
+	/** Función para iniciar la rotación táctil (llamar en onTouchStart del handle) */
+	handleRotateTouchStart: (e: React.TouchEvent) => void
 	/** Función para cuando el mouse entra (onMouseEnter) */
 	handleMouseEnter: () => void
 	/** Función para cuando el mouse sale (onMouseLeave) */
@@ -141,6 +145,33 @@ export function useDraggable(
 	}, [isDragging, isRotating])
 
 	/**
+	 * Maneja el movimiento táctil mientras se arrastra o rota
+	 */
+	const handleTouchMove = useCallback((e: TouchEvent) => {
+		if (isDragging) {
+			const touch = e.touches[0]
+			const deltaX = touch.clientX - dragStartPos.current.x
+			const deltaY = touch.clientY - dragStartPos.current.y
+
+			setPosition({
+				x: elementStartPos.current.x + deltaX,
+				y: elementStartPos.current.y + deltaY
+			})
+		} else if (isRotating) {
+			const touch = e.touches[0]
+			const currentAngle = calculateAngle(
+				centerPos.current.x,
+				centerPos.current.y,
+				touch.clientX,
+				touch.clientY
+			)
+
+			const angleDelta = currentAngle - initialMouseAngle.current
+			setRotation(rotationStart.current + angleDelta)
+		}
+	}, [isDragging, isRotating])
+
+	/**
 	 * Maneja cuando se suelta el botón del mouse
 	 * Finaliza el arrastre o la rotación
 	 */
@@ -163,6 +194,21 @@ export function useDraggable(
 		dragStartPos.current = { x: e.clientX, y: e.clientY }
 
 		// Guarda la posición actual del elemento
+		elementStartPos.current = position
+	}, [position])
+
+	/**
+	 * Maneja cuando se inicia un toque sobre el elemento
+	 * Inicia el arrastre para dispositivos táctiles
+	 */
+	const handleTouchStart = useCallback((e: React.TouchEvent) => {
+		e.stopPropagation()
+
+		setIsDragging(true)
+		setIsHovered(true)
+
+		const touch = e.touches[0]
+		dragStartPos.current = { x: touch.clientX, y: touch.clientY }
 		elementStartPos.current = position
 	}, [position])
 
@@ -199,6 +245,36 @@ export function useDraggable(
 	}, [rotation])
 
 	/**
+	 * Maneja cuando se inicia un toque sobre el handle de rotación
+	 * Inicia la rotación para dispositivos táctiles
+	 */
+	const handleRotateTouchStart = useCallback((e: React.TouchEvent) => {
+		e.stopPropagation()
+
+		setIsRotating(true)
+		setIsHovered(true)
+
+		const target = e.currentTarget.parentElement
+		if (target) {
+			const rect = target.getBoundingClientRect()
+			centerPos.current = {
+				x: rect.left + rect.width / 2,
+				y: rect.top + rect.height / 2
+			}
+		}
+
+		rotationStart.current = rotation
+
+		const touch = e.touches[0]
+		initialMouseAngle.current = calculateAngle(
+			centerPos.current.x,
+			centerPos.current.y,
+			touch.clientX,
+			touch.clientY
+		)
+	}, [rotation])
+
+	/**
 	 * Effect: Añade y remueve listeners cuando se está arrastrando o rotando
 	 * Esto permite detectar el movimiento y soltar el mouse en toda la ventana
 	 */
@@ -207,14 +283,18 @@ export function useDraggable(
 			// Añade listeners globales para detectar movimiento y soltar en cualquier parte
 			document.addEventListener('mousemove', handleMouseMove)
 			document.addEventListener('mouseup', handleMouseUp)
+			document.addEventListener('touchmove', handleTouchMove)
+			document.addEventListener('touchend', handleMouseUp)
 
 			// Cleanup: remueve los listeners cuando ya no se necesitan
 			return () => {
 				document.removeEventListener('mousemove', handleMouseMove)
 				document.removeEventListener('mouseup', handleMouseUp)
+				document.removeEventListener('touchmove', handleTouchMove)
+				document.removeEventListener('touchend', handleMouseUp)
 			}
 		}
-	}, [isDragging, isRotating, handleMouseMove, handleMouseUp])
+	}, [isDragging, isRotating, handleMouseMove, handleMouseUp, handleTouchMove])
 
 	/**
 	 * Maneja cuando el mouse entra al área del sticker
@@ -263,7 +343,9 @@ export function useDraggable(
 		isRotating,
 		isHovered,
 		handleMouseDown,
+		handleTouchStart,
 		handleRotateStart,
+		handleRotateTouchStart,
 		handleMouseEnter,
 		handleMouseLeave,
 		resetPosition

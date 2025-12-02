@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { HamburgerMenu } from './HamburgerMenu';
 
 export function Header() {
 	return (
@@ -6,6 +7,9 @@ export function Header() {
 			<div className='topbar'>
 				<div className='container'>
 					<div className='bar'>
+						<div className="header-left">
+							<HamburgerMenu />
+						</div>
 						<Link
 							to="/"
 							aria-current="page"
@@ -13,6 +17,7 @@ export function Header() {
 							aria-label="BOOZY - El blend más sexy"
 						>
 						</Link>
+						<div className="header-right"></div>
 					</div>
 				</div>
 			</div>

@@ -9,6 +9,9 @@ import stickerRed from '../assets/sticker-red.png'
 import picture2WebP from '../assets/picture-2.webp'
 
 export function SosSexy() {
+	// Detectar si estamos en mobile
+	const isMobile = window.innerWidth <= 768
+
 	return (
 		<div className='sos-sexy-page'>
 			<div className='sos-sexy-container'>
@@ -16,7 +19,7 @@ export function SosSexy() {
 				<div className='sos-sexy-images'>
 					<div className='sos-sexy-image-item'>
 						<OptimizedImage
-							
+
 							webpSrc={picture2WebP}
 							alt='BOOZY - Cóctel helado premium'
 							loading='lazy'
@@ -31,10 +34,10 @@ export function SosSexy() {
 						<DraggableSticker
 							src={stickerRed}
 							alt='BOOZY Sticker'
-							initialX={700}
-							initialY={-30}
+							initialX={isMobile ? window.innerWidth - 120 : 700}
+							initialY={isMobile ? -20 : -30}
 							initialRotation={-15}
-							size={100}
+							size={isMobile ? 80 : 100}
 							zIndex={100}
 						/>
 					</div>

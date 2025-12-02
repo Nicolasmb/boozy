@@ -57,7 +57,9 @@ export function DraggableSticker({
 		isRotating,
 		isHovered,
 		handleMouseDown,
+		handleTouchStart,
 		handleRotateStart,
+		handleRotateTouchStart,
 		handleMouseEnter,
 		handleMouseLeave
 	} = useDraggable(initialX, initialY, initialRotation)
@@ -89,6 +91,7 @@ export function DraggableSticker({
 			<div
 				className="sticker"
 				onMouseDown={handleMouseDown}
+				onTouchStart={handleTouchStart}
 				style={{
 					width: '100%',
 					height: '100%',
@@ -103,7 +106,10 @@ export function DraggableSticker({
 					transition: isDragging || isRotating ? 'none' : 'transform 0.2s ease',
 
 					// Para mejor rendimiento en animaciones
-					willChange: isDragging || isRotating ? 'transform' : 'auto'
+					willChange: isDragging || isRotating ? 'transform' : 'auto',
+
+					// Mejora el rendimiento táctil
+					touchAction: 'none'
 				}}
 			>
 				{/* Brillos plateados - rotan junto con el sticker */}
@@ -119,6 +125,7 @@ export function DraggableSticker({
 					<div
 						className="rotation-handle"
 						onMouseDown={handleRotateStart}
+						onTouchStart={handleRotateTouchStart}
 						title="Arrastrar para rotar"
 					>
 						↻

@@ -2,10 +2,8 @@ import { OptimizedImage } from '../components/OptimizedImage'
 import { DraggableSticker } from '../components/DraggableSticker'
 
 // Import images
-
 import picture8Webp from '../assets/picture-8.webp'
-
-import picture7Webp from '../assets/picture-7.webp'
+import picture10Webp from '../assets/picture-10.webp'
 
 // Import sticker
 import stickerRed from '../assets/sticker-red.png'
@@ -14,6 +12,16 @@ export function Preguntas() {
   return (
     <div className='preguntas-page'>
       <div className='preguntas-container'>
+        {/* Hero image - solo visible en mobile */}
+        <div className='preguntas-hero-mobile'>
+          <OptimizedImage
+            webpSrc={picture10Webp}
+            alt="Boozy"
+            loading="eager"
+            className='preguntas-hero-image'
+          />
+        </div>
+
         {/* Header con título y sticker */}
         <div className='preguntas-header'>
           <h1 className='preguntas-title'>Preguntas frecuentes</h1>
@@ -76,16 +84,8 @@ export function Preguntas() {
         {/* Grid de imágenes */}
         <div className='preguntas-images-grid'>
           <OptimizedImage
-            
             webpSrc={picture8Webp}
             alt="Boozy producto"
-            loading="lazy"
-            className='preguntas-image'
-          />
-          <OptimizedImage
-            
-            webpSrc={picture7Webp}
-            alt="El blend más sexy"
             loading="lazy"
             className='preguntas-image'
           />
